@@ -5,6 +5,8 @@ import TextField from '@mui/material/TextField';
 import { useForm, Controller } from "react-hook-form";
 import { vestResolver } from "@hookform/resolvers/vest";
 import { FormValidation } from './LoginPageValidate';
+import { useAuthStore } from '../../store/auth/authStore';
+import { useNavigate } from 'react-router-dom';
 
 
 export const LoginPageAuth = () => {
@@ -28,6 +30,8 @@ export const LoginPageAuth = () => {
 
             if (response.ok) {
                 console.log('Inicio de sesión exitoso');
+                changeLogged()
+                navigate('/products')
                 
             } else {
                 const responseData = await response.json();
@@ -38,6 +42,12 @@ export const LoginPageAuth = () => {
             setError('Error al iniciar sesión');
         }
     };
+
+    const changeLogged = useAuthStore(state => state.changeLogged)
+
+    const navigate = useNavigate();
+
+    
 
     return (
         <>
