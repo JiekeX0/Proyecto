@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom"
 import { useAuthStore } from "../store/auth/authStore"
 import TestLogin from "../components/TestLogin"
-import TestProductos from "../components/TestProductos"
+import TableProducts from "../components/TableProducts"
 
 export const AppRoutes = () =>{
 
@@ -13,8 +13,8 @@ export const AppRoutes = () =>{
     return(
       <Routes>
             {!logged 
-            ?   <Route path="login" element={<TestLogin />}/>
-           :    <Route path="products" element={<TestProductos />}/>
+            ?   <Route path="/" element={<TestLogin />}/>
+           :    <Route path="products" element={<TableProducts />}/>
             }
 
         </Routes> 
