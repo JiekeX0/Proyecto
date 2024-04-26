@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom"
 import { useAuthStore } from "../store/auth/authStore"
-import TestLogin from "../components/TestLogin"
 import TableProducts from "../components/TableProducts"
+import { LoginPageAuth } from "../auth/pages/LoginPageAuth"
 
 export const AppRoutes = () =>{
 
@@ -13,7 +13,7 @@ export const AppRoutes = () =>{
     return(
       <Routes>
             {!logged 
-            ?   <Route path="/" element={<TestLogin />}/>
+            ?   <Route path="/" element={<LoginPageAuth />}/>
            :    <Route path="products" element={<TableProducts />}/>
             }
 
