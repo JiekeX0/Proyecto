@@ -1,22 +1,42 @@
+import { useState } from 'react';
 import { Button } from '@mui/material';
 import { Avatar } from '@mui/material';
-
 import TextField from '@mui/material/TextField';
 import { useForm, Controller } from "react-hook-form";
 import { vestResolver } from "@hookform/resolvers/vest";
 import { FormValidation } from './LoginPageValidate';
 
 
-export const LoginPage = () => {
+export const LoginPageAuth = () => {
+    const [error, setError] = useState<string | null>(null); 
 
-    const { register, handleSubmit, formState, control } = useForm({
+    const { handleSubmit, formState, control } = useForm({
         mode: "onChange",
         reValidateMode: "onChange",
         resolver: vestResolver(FormValidation)
     });
 
-    const onSubmit = (data: any) => {
-        console.log('Datos del formulario:', data);
+    const handleLogin = async (data: any) => {
+        try {
+            const response = await fetch('https://fakestoreapi.com/auth/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                console.log('Inicio de sesión exitoso');
+                
+            } else {
+                const responseData = await response.json();
+                setError(responseData.message || 'Error al iniciar sesión');
+            }
+        } catch (error) {
+            console.error('Error al iniciar sesión:', error);
+            setError('Error al iniciar sesión');
+        }
     };
 
     return (
@@ -24,22 +44,20 @@ export const LoginPage = () => {
             <Avatar
                 alt="Duck"
                 src="../../../public/img/images.jpg"
-                sx={{ width: 100, height: 100 }}
+                sx={{ width: 300, height: 300 }}
             />
 
             <h1>Login</h1>
 
-            <form onSubmit={handleSubmit(onSubmit)}>
-
+            <form onSubmit={handleSubmit(handleLogin)}>
                 <Controller
                     name="username"
                     control={control}
                     render={({ field }) => (
                         <TextField
                             {...field}
-                            {...register("username")}
                             id="username-input"
-                            label={`${("Usuario")}`}
+                            label="User"
                             variant="outlined"
                             sx={{ m: 2 }}
                             error={formState.errors?.username ? true : false}
@@ -49,15 +67,15 @@ export const LoginPage = () => {
                     )}
                 />
                 <br />
+                
                 <Controller
                     name="password"
                     control={control}
                     render={({ field }) => (
                         <TextField
                             {...field}
-                            {...register("password")}
                             id="password-input"
-                            label={`${("Contraseña")}`}
+                            label="Password"
                             variant="outlined"
                             sx={{ m: 2 }}
                             type='password'
@@ -65,14 +83,14 @@ export const LoginPage = () => {
                             helperText={(formState.errors?.password?.message as string) ?? ""}
                             size="small"
                         />
-
                     )}
                 />
-
                 <br />
+                {error && <p style={{ color: 'red' }}>{error}</p>}
                 <Button variant="contained" type='submit'>
                     Login
                 </Button>
+                
             </form>
         </>
     );

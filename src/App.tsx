@@ -1,11 +1,11 @@
 
 import './App.css'
-import { LoginPage } from './auth/pages/LoginPage'
+import { LoginPageAuth } from './auth/pages/LoginPageAuth'
 function App() {
 
   return (
     <>
-      <LoginPage></LoginPage>
+      <LoginPageAuth></LoginPageAuth>
     </>
   )
 }
