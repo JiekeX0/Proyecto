@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
-interface Product {
-  id: number;
+export interface Product {
+  id?: number;
   title: string;
   price: number;
   category: string;
   description: string;
   image: string;
-  rating: {
+  rating?: {
     rate: number;
     count: number;
   };

@@ -1,74 +1,48 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
-import { useState } from "react";
+import { vestResolver } from "@hookform/resolvers/vest";
+import { Button, Box, TextField} from "@mui/material";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
-import { create, test, enforce } from "vest";
+import { NewProductValidate } from "./NewProductValidate";
+import { Product } from "../TableProducts";
+import { useMutation } from "@tanstack/react-query";
+import { addProductQuery } from "./AddNewProduct.services";
 
+export default function AddNewProduct(){
 
-interface Product{
-    id?: number;
-    title: string;
-    price: number | null;
-    category: string;
-    description: string;
-    image:string;
-    rating?: {
-        rate: number;
-        count: number;
-    }
-}
-
-
-
-
-export default function AddNewProductDialog(){
-
-    const { control, handleSubmit, register } = useForm({
-        defaultValues: {
-            title: "",
-            price: null,
-            category: "",
-            description: "",
-            image:""
-        }
+    const { control, handleSubmit, register, formState, reset } = useForm<Product>({
+        mode: 'onTouched',
+        reValidateMode: 'onChange',
+        resolver: vestResolver(NewProductValidate)
     })
 
-    const onSubmit: SubmitHandler<Product> = (data) =>{
-        console.log(data)
-
-    }
-
-    const [open, setOpen] = useState(false);
-
-    const onOpen = () => {
-        setOpen(true);
+    const mutation = useMutation({mutationFn: (product: Product) => addProductQuery(product), onSuccess: ()=> reset()})
+    
+    const onSubmit: SubmitHandler<Product> = (product) =>{
+        
+        console.log(product);
+        mutation.mutateAsync(product).then((res)=>console.log({data: res}));
     }
 
     const onClose = () => {
-        setOpen(false)
+        reset()
     }
 
+    
     return(
-        <>
-            <Button onClick={onOpen} > Add Product </Button>
-            <Dialog
-                open={open}
-                onClose={onClose}
-                PaperProps={{
-                    component: 'form',
-                    onSubmit: handleSubmit(onSubmit),
-                }}
-            >
-                <DialogTitle sx={{textAlign: 'center', bgcolor: '#2a2829', color: 'white'}}>Add New Product</DialogTitle>
-                <DialogContent sx={{bgcolor: '#dcdde1'}}>
+
+        <Box component='section' sx={{margin: 0, display: 'flex', justifyContent: 'center'}}>
+            {mutation.isPending && <h2>Is Pending...</h2>}
+            {mutation.isError && <h2>Error message</h2>}
+
+           <form className='newProduct' onSubmit={handleSubmit(onSubmit)}>
+                <Box sx={{display:'flex', justifyContent: 'center' ,alignItems: 'center', bgcolor: '#386947', color: 'white', height: 40, fontWeight: 'bolder' }}>ADD NEW PRODUCT</Box>
+                <Box sx={{bgcolor: '#f4f9f4', padding: 3}}>
                     <Controller
                         name="title"
                         control={control}
                         render={
-                            ({field}) =>
+                            () =>
                                 <TextField
-                                    {...field}
                                     {...register("title")}
-                                    autoFocus
                                     required
                                     margin="dense"
                                     id="title"
@@ -77,6 +51,8 @@ export default function AddNewProductDialog(){
                                     type="text"
                                     fullWidth
                                     variant="standard"
+                                    error={formState.errors.title ? true : false}
+                                    helperText={(formState.errors?.title?.message as string) ?? ""}
                                 />
                         }
                     />
@@ -84,11 +60,9 @@ export default function AddNewProductDialog(){
                         name="price"
                         control={control}
                         render={
-                            ({field}) =>
+                            () =>
                                 <TextField
-                                    {...field}
                                     {...register("price")}
-                                    autoFocus
                                     required
                                     margin="dense"
                                     id="price"
@@ -97,6 +71,8 @@ export default function AddNewProductDialog(){
                                     type="number"
                                     fullWidth
                                     variant="standard"
+                                    error={formState.errors.price ? true: false}
+                                    helperText={(formState.errors?.price?.message as string) ?? ""}
                                 />
                         }
                     />
@@ -104,19 +80,19 @@ export default function AddNewProductDialog(){
                         name="description"
                         control={control}
                         render={
-                            ({field}) =>
+                            () =>
                                 <TextField
-                                    {...field}
                                     {...register("description")}
-                                    autoFocus
                                     required
                                     margin="dense"
                                     id="description"
                                     name="description"
-                                    label="Descripción"
+                                    label="Description"
                                     type="text"
                                     fullWidth
                                     variant="standard"
+                                    error={formState.errors.description ? true : false}
+                                    helperText={(formState.errors?.description?.message as string) ?? ""}
                                 />
                         }
                     />
@@ -124,11 +100,9 @@ export default function AddNewProductDialog(){
                         name="image"
                         control={control}
                         render={
-                            ({field}) =>
+                            () =>
                                 <TextField
-                                    {...field}
                                     {...register("image")}
-                                    autoFocus
                                     required
                                     margin="dense"
                                     id="image"
@@ -137,6 +111,8 @@ export default function AddNewProductDialog(){
                                     type="text"
                                     fullWidth
                                     variant="standard"
+                                    error={formState.errors.image ? true : false}
+                                    helperText={(formState.errors?.image?.message as string) ?? ""}
                                 />
                         }
                     />
@@ -144,11 +120,9 @@ export default function AddNewProductDialog(){
                         name="category"
                         control={control}
                         render={
-                            ({field}) =>
+                            () =>
                                 <TextField
-                                    {...field}
                                     {...register("category")}
-                                    autoFocus
                                     required
                                     margin="dense"
                                     id="category"
@@ -157,18 +131,19 @@ export default function AddNewProductDialog(){
                                     type="text"
                                     fullWidth
                                     variant="standard"
+                                    error={formState.errors.category ? true : false}
+                                    helperText={(formState.errors?.category?.message as string) ?? ""}
                                 />
                         }
                     />
         
-                </DialogContent>
-                <DialogActions sx={{display: 'flex', justifyContent: 'space-around', bgcolor: '#2a2829', color: 'white'}}>
-                    <Button onClick={onClose}>Cancel</Button>
-                    <Button type="submit">Subscribe</Button>
-                </DialogActions>
+                </Box>
 
-            </Dialog>
-
-        </>
+                <Box sx={{display: 'flex', justifyContent: 'space-around', bgcolor: '#cce6d1', color: 'white'}}>
+                    <Button onClick={onClose} sx={{width: '50%', color: '#26412c'}}>Cancel</Button>
+                    <Button type="submit" sx={{width: '50%', color: '#26412c'}}>Add product</Button>
+                </Box>
+            </form>
+        </Box>
     )
 }
