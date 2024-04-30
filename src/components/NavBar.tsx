@@ -10,16 +10,16 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { Link } from 'react-router-dom'; // Importar Link
+import { Link } from 'react-router-dom'; 
 
-const pages = ['Products', 'New-Product', 'cart'];
-const settings = ['Profile','Logout'];
+const pages = ['Products', 'new-product', 'cart'];
+const settings = ['Profile', 'Logout'];
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
- 
+
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -57,7 +57,7 @@ function NavBar() {
             >
               {pages.map((page) => (
                 <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Link to={`/${page.toLowerCase()}`} style={{ textDecoration: 'none', color: 'inherit' }}> {/* Definir la ruta */}
+                  <Link to={page === 'new-product' ? '/product/new-product' : `/${page.toLowerCase()}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <Typography textAlign="center">{page}</Typography>
                   </Link>
                 </MenuItem>

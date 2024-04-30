@@ -26,6 +26,7 @@ a:hover {
 body {
   margin: 0;
   display: flex;
+  justify-content: center;
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
@@ -59,6 +60,12 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+
+.newProduct {
+  padding: 15px;
+  border-radius: 50px;
+}
+
 
 @media (prefers-color-scheme: light) {
   :root {

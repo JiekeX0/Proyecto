@@ -4,6 +4,8 @@ import App from "../App"
 import { LoginPageAuth } from "../auth/pages/LoginPageAuth"
 import TableCarts from '../components/TableCarts';
 import ProductsTable from "../components/TableProducts";
+import AddNewProduct from "../components/AddNewProduct/AddNewProduct"
+
 
 export const AppRoutes = () =>{
 
@@ -22,7 +24,7 @@ export const AppRoutes = () =>{
             :    <Route path="/" element={<App />}>
                     <Route path="products" element={<ProductsTable />} />
                     <Route path="cart" element={<TableCarts />} />
-                 {/* <Route path="products/create" element={<AddNewProduct />}/> */}
+                    <Route path="new-product" element={<AddNewProduct />} />
                 </Route>
             }
         </Routes> 
