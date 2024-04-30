@@ -4,7 +4,7 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: rgba(0, 0, 0, 0.87);
   background-color: #f5f4f4;
 
   font-synthesis: none;
@@ -12,6 +12,7 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+img{width: 30%;}
 
 a {
   font-weight: 500;
@@ -33,6 +34,10 @@ body {
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
+  color: #1a1a1a;
+}
+
+h5{
   color: #1a1a1a;
 }
 
