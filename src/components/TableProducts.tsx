@@ -1,71 +1,83 @@
-import { useQuery } from '@tanstack/react-query';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Product, useProductStore } from '../store/product/productStore';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import EditForm from './EditForm';
 
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  category: string;
-  description: string;
-  image: string;
-  rating: {
-    rate: number;
-    count: number;
+const TableProducts = () => {
+  const { products, setProducts, deleteProduct, editProduct } = useProductStore();
+  const [editProductData, setEditProductData] = useState<Product | null>(null);
+
+  const { data } = useQuery({
+    queryKey: ["getProducts"],
+    queryFn: async () => fetch('https://fakestoreapi.com/products').then((data) => data.json()),
+  });
+
+  const handleDelete = (productId: number) => {
+    deleteProduct(productId);
   };
-}
 
-const fetchProducts = async (): Promise<Product[]> => {
-  const response = await fetch('https://fakestoreapi.com/products');
-  if (!response.ok) {
-    throw new Error('Failed to fetch products');
-  }
-  return response.json();
-};
+  const handleEdit = (productId: number, productData: Product) => {
+    setEditProductData(productData);
+  };
 
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'title', headerName: 'Title', width: 200 },
-  { field: 'price', headerName: 'Price', width: 120 },
-  { field: 'description', headerName: 'Description', width: 300 },
-  { field: 'category', headerName: 'Category', width: 150 },
-];
+  const handleSaveEdit = (productId: number, updatedProduct: Product) => {
+    editProduct(productId, updatedProduct);
+    setEditProductData(null);
+  };
 
-const ProductsTable = () => {
-  const { data: products, isLoading, isError } = useQuery({ queryKey: ["productos"], queryFn: async () => fetchProducts().then((res) => res) });
+  useEffect(() => {
+    setProducts(data as unknown as Product[] ?? []);
+  }, [data]);
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  const handleSort = (field: string) => {
+    fetch(`https://fakestoreapi.com/products?sort=${field}`)
+      .then(res => res.json())
+      .then(json => setProducts(json));
+  };
 
-  if (isError) {
-    return <div>Error fetching products</div>;
-  }
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'title', headerName: 'Title', width: 200 },
+    { field: 'price', headerName: 'Price', width: 120 },
+    { field: 'category', headerName: 'Category', width: 150 },
+    { field: 'image', headerName: 'Image', width: 300 },
+    { field: 'description', headerName: 'Description', width: 300 },
+    {
+      field: 'delete',
+      headerName: 'Delete',
+      width: 150,
+      renderCell: (params) => (
+        <button onClick={() => handleDelete(params.row.id)}>Delete</button>
+      ),
+    },
+    {
+      field: 'edit',
+      headerName: 'Edit',
+      width: 150,
+      renderCell: (params) => (
+        <button onClick={() => handleEdit(params.row.id, params.row)}>Edit</button>
+      ),
+    },
+  ];
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={products}
-        columns={columns}
-        pagination
-        pageSizeOptions={[5, 10]}
-        disableRowSelectionOnClick
-        sx={{
-          '& .MuiDataGrid-colCell': {
-            backgroundColor: '#a38d9e', 
-          },
-          '& .MuiDataGrid-row:nth-of-type(odd)': {
-            backgroundColor: '#e8f1ec',
-          },
-          '& .MuiDataGrid-row:nth-of-type(even)': {
-            backgroundColor: '#ced9d1',
-          },
-          boxShadow: 2,
-          border: 2,
-          borderColor: '#386947',
-        }}
-      />
+    <div style={{ margin: '10%', height: 400, width: '100%', maxWidth: '1500px' }}>
+      <div>
+        <button onClick={() => handleSort('title')}>Sort by Title</button>
+        <button onClick={() => handleSort('price')}>Sort by Price</button>
+        <button onClick={() => handleSort('category')}>Sort by Category</button>
+      </div>
+      <DataGrid rows={products} columns={columns} />
+      {editProductData && (
+        <EditForm
+          product={editProductData}
+          onSave={(updatedProduct) => handleSaveEdit(editProductData.id, updatedProduct)}
+          onCancel={() => setEditProductData(null)}
+        />
+      )}
     </div>
   );
 };
 
-export default ProductsTable;
+export default TableProducts;
