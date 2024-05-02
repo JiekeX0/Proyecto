@@ -3,6 +3,7 @@ import { useAuthStore } from "../store/auth/authStore"
 import TableProducts from "../components/TableProducts"
 import { LoginPageAuth } from "../auth/pages/LoginPageAuth"
 import AddNewProduct from "../components/AddNewProduct/AddNewProduct"
+import { FilterByCategory } from "../components/FilterByCategory"
 
 
 export const AppRoutes = () =>{
@@ -22,7 +23,8 @@ export const AppRoutes = () =>{
             element={<TableProducts />}
             />
           }
-          <Route path="products/create" element={<AddNewProduct />}/> 
+          <Route path="products/create" element={<AddNewProduct />}/>
+          <Route path ="products/category" element={<FilterByCategory />}/>
         </Routes> 
     )
 }
