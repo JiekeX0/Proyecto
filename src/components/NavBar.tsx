@@ -12,7 +12,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom'; 
 
-const pages = ['Products', 'new-product', 'cart'];
+const pages = ['Products', 'cart'];
 const settings = ['Profile', 'Logout'];
 
 function NavBar() {

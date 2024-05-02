@@ -6,6 +6,7 @@ import { DataGrid, GridColDef, GridApi } from "@mui/x-data-grid";
 import { Button, Modal, Backdrop, Fade, Box, Typography, Grid } from '@mui/material';
 import { FilterByCategory } from './FilterByCategory';
 import { ProductCard } from './ProductCard';
+import AddNewProduct from './AddNewProduct/AddNewProduct';
 
 
 export interface Category{
@@ -20,6 +21,7 @@ export const TableProducts = () => {
   const [open, setOpen] = useState(false); // Estado para controlar si la modal está abierta
   const [selectedRowData, setSelectedRowData] = useState<any>(null); // Estado para almacenar los datos de la fila seleccionada
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
+  const [addProduct, setAddProdut] = useState(false);
 
   let categories:Category [] = [];
   
@@ -152,6 +154,12 @@ export const TableProducts = () => {
     },
   ];
 
+
+  const handleAddProduct = () => {
+    setSelectedCategory(null)
+    setAddProdut(true);
+}
+
   return (
     <div style={{ height: 800, width: '100%' }}>
       <Box sx={{
@@ -160,14 +168,17 @@ export const TableProducts = () => {
         alignItems: 'center',
         gap: 2,
         width: '100%',
-        height: '8%',
-        padding: 1,
+        height: '9%'
       }}>
         <button onClick={() => handleSort('title')}>Sort by Title</button>
         <button onClick={() => handleSort('price')}>Sort by Price</button>
         <button onClick={() => handleSort('category')}>Sort by Category</button>
+        <button onClick={handleAddProduct}>Add Product</button>
         <FilterByCategory selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} categories={categories}/>
       </Box>
+
+      <AddNewProduct open={addProduct} setOpen={setAddProdut} />
+
       {selectedCategory ? 
             <Grid container direction="row" justifyContent='center' spacing={{ xs:3, md: 4}}> 
                 {products.map((product: Product)=>
