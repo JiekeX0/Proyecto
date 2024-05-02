@@ -5,7 +5,6 @@ import { TableProducts } from "../components/TableProducts";
 import { LoginPageAuth } from "../auth/pages/LoginPageAuth";
 import AddNewProduct from "../components/AddNewProduct/AddNewProduct";
 import TableCarts from "../components/TableCarts";
-import ProductsTable from "../components/TableProducts";
 import App from "../App";
 
 export const AppRoutes = () => {

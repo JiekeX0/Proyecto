@@ -1,13 +1,13 @@
 import { create } from 'zustand';
 
 export interface Product {
-    id: number;
+    id?: number;
     title: string;
     price: number;
     category: string;
     image: string;
     description: string;
-    rating: {
+    rating?: {
         rate: number;
         count: number;
     };

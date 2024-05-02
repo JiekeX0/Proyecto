@@ -11,7 +11,6 @@ function App() {
     <>
       <NavBar />
       <Routes>
-        <Route path="/products" element={<ProductsTable />} />
         <Route path="/products" element={<TableProducts />} />
         <Route path="/cart" element={<TableCarts />} />
         <Route path="/new-product" element={<AddNewProduct />} />
