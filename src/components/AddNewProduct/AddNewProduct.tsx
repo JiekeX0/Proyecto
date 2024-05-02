@@ -2,9 +2,9 @@ import { vestResolver } from "@hookform/resolvers/vest";
 import { Button, Box, TextField} from "@mui/material";
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { NewProductValidate } from "./NewProductValidate";
-import { Product } from "../TableProducts";
 import { useMutation } from "@tanstack/react-query";
 import { addProductQuery } from "./AddNewProduct.services";
+import { Product } from "../../store/product/productStore";
 
 export default function AddNewProduct(){
 
