@@ -3,7 +3,15 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import EditForm from './EditForm';
 import { DataGrid, GridColDef, GridApi } from "@mui/x-data-grid";
-import { Button, Modal, Backdrop, Fade, Box, Typography } from '@mui/material';
+import { Button, Modal, Backdrop, Fade, Box, Typography, Grid } from '@mui/material';
+import { FilterByCategory } from './FilterByCategory';
+import { ProductCard } from './ProductCard';
+
+
+export interface Category{
+  firstLetter: string,
+  category: string
+}
 
 export const TableProducts = () => {
   const { products, setProducts, deleteProduct, editProduct } = useProductStore();
@@ -11,7 +19,10 @@ export const TableProducts = () => {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [open, setOpen] = useState(false); // Estado para controlar si la modal está abierta
   const [selectedRowData, setSelectedRowData] = useState<any>(null); // Estado para almacenar los datos de la fila seleccionada
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
 
+  let categories:Category [] = [];
+  
   const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -33,7 +44,7 @@ export const TableProducts = () => {
     deleteProduct(productId);
   }
 
-  const handleEdit = (productId: number, productData: Product) => {
+  const handleEdit = ( productData: Product) => {
     setEditProductData(productData);
   };
 
@@ -44,9 +55,34 @@ export const TableProducts = () => {
 
   useEffect(() => {
     setProducts(data as unknown as Product[] ?? []);
-  }, [data]);
+  }, [data, selectedCategory]);
+
+  function fetchCategory(){
+    return fetch('https://fakestoreapi.com/products/categories')
+        .then(res=>res.json())
+        .then(json=>{
+            return json
+        })
+  }
+
+  const allCategories = useQuery({queryKey: ['categories'], queryFn: ()=>fetchCategory()})
+   
+ 
+      {allCategories.isLoading && <h1>Is Loading...</h1>}
+      {allCategories.isError && <h1>Error...</h1>}
+    
+      if(allCategories.isSuccess){
+           categories = allCategories?.data.map((category: string) => {
+           const firstLetter = category[0].toUpperCase();
+           return {
+               firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
+               category: category,
+            }; 
+        }); 
+  }
 
   const handleSort = (field: string) => {
+    setSelectedCategory(null)
     fetch('https://fakestoreapi.com/products')
       .then(res => res.json())
       .then(data => {
@@ -111,18 +147,34 @@ export const TableProducts = () => {
       headerName: 'Edit',
       width: 150,
       renderCell: (params) => (
-        <button onClick={() => handleEdit(params.row.id, params.row)}>Edit</button>
+        <button onClick={() => handleEdit(params.row.id)}>Edit</button>
       ),
     },
   ];
 
   return (
     <div style={{ height: 800, width: '100%' }}>
-      <div>
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        gap: 2,
+        width: '100%',
+        height: '8%',
+        padding: 1,
+      }}>
         <button onClick={() => handleSort('title')}>Sort by Title</button>
         <button onClick={() => handleSort('price')}>Sort by Price</button>
         <button onClick={() => handleSort('category')}>Sort by Category</button>
-      </div>
+        <FilterByCategory selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} categories={categories}/>
+      </Box>
+      {selectedCategory ? 
+            <Grid container direction="row" justifyContent='center' spacing={{ xs:3, md: 4}}> 
+                {products.map((product: Product)=>
+                    <Grid item key={product.id}><ProductCard product={product}/></Grid>
+                )}
+            </Grid> 
+      :<>
       <DataGrid
         rows={products}
         columns={columns}
@@ -146,12 +198,12 @@ export const TableProducts = () => {
           border: 2,
           borderColor: '#386947',
         }}
-      />
+        />
       {editProductData && (
         <EditForm
-          product={editProductData}
-          onSave={(updatedProduct) => handleSaveEdit(editProductData.id, updatedProduct)}
-          onCancel={() => setEditProductData(null)}
+        product={editProductData}
+        onSave={(updatedProduct) => handleSaveEdit(editProductData.id, updatedProduct)}
+        onCancel={() => setEditProductData(null)}
         />
       )}
 
@@ -168,7 +220,7 @@ export const TableProducts = () => {
               timeout: 500,
             },
           }}
-        >
+          >
           <Fade in={open}>
             <Box sx={style}>
               <Typography variant="h5" component="h2">
@@ -179,7 +231,7 @@ export const TableProducts = () => {
                 <img
                   src={selectedRowData ? selectedRowData['image'] : 'No data'}
                   alt=""
-                />
+                  />
               </Typography>
               <Typography variant="h6" component="h2">
                 Price: {selectedRowData ? selectedRowData['price'] : 'No data'}€
@@ -194,6 +246,7 @@ export const TableProducts = () => {
           </Fade>
         </Modal>
       </div>
+      </>}
     </div>
   );
 };
