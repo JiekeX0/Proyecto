@@ -1,3 +1,4 @@
+import { FilterByCategory } from "../components/FilterByCategory"
 import { Routes, Route } from "react-router-dom";
 import { useAuthStore } from "../store/auth/authStore";
 import { TableProducts } from "../components/TableProducts";
@@ -22,6 +23,7 @@ export const AppRoutes = () => {
                     <Route path="products" element={<TableProducts />} />
                     <Route path="cart" element={<TableCarts />} />
                     <Route path="new-product" element={<AddNewProduct />} />
+                    <Route path="filter-category" element={<FilterByCategory/>}/>
                 </Route>
             }
         </Routes>

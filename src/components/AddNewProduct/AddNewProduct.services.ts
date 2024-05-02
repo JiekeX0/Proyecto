@@ -1,4 +1,4 @@
-import { Product } from "../TableProducts";
+import { Product } from "../../store/product/productStore"
 
 export function addProductQuery( product: Product){
     return fetch('https://fakestoreapi.com/products',{
