@@ -2,7 +2,7 @@ import { Autocomplete, TextField, Grid, Box } from "@mui/material"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { ProductCard } from "./ProductCard"
-import { Product } from "./TableProducts"
+import { Product } from "../store/product/productStore"
 
 interface Category{
     firstLetter: string,
@@ -20,7 +20,6 @@ export const FilterByCategory = () => {
         return fetch('https://fakestoreapi.com/products/categories')
             .then(res=>res.json())
             .then(json=>{
-                console.log({consulta: json});
                 return json
             })
     }
@@ -29,7 +28,6 @@ export const FilterByCategory = () => {
         return fetch(`https://fakestoreapi.com/products/category/${category}`)
             .then(res=>res.json())
             .then(json=>{
-                console.log(json)
                 return json
             })
     }

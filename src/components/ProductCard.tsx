@@ -1,5 +1,5 @@
 import { Button, Card, CardActions, CardContent, CardMedia, Typography } from "@mui/material";
-import { Product } from "./TableProducts";
+import { Product } from "../store/product/productStore";
 
 export const ProductCard = ({product}:{product: Product}) => {
 
