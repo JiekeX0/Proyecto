@@ -26,6 +26,7 @@ export const AppRoutes = () =>{
                     <Route path="products" element={<ProductsTable />} />
                     <Route path="cart" element={<TableCarts />} />
                     <Route path="new-product" element={<AddNewProduct />} />
+                    <Route path="filter-category" element={<FilterByCategory/>}/>
                 </Route>
             }
         </Routes> 
