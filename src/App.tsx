@@ -1,13 +1,21 @@
+import { Route, Routes } from 'react-router-dom';
+import './App.css';
+import NavBar from './components/NavBar';
+import TableCarts from './components/TableCarts';
+import { TableProducts } from './components/TableProducts';
+import AddNewProduct from './components/AddNewProduct/AddNewProduct';
 
-import './App.css'
-import { LoginPageAuth } from './auth/pages/LoginPageAuth'
 function App() {
-
   return (
-    
-      <LoginPageAuth/>
-    
-  )
+    <>
+      <NavBar />
+      <Routes>
+        <Route path="/products" element={<TableProducts />} />
+        <Route path="/cart" element={<TableCarts />} />
+        <Route path="/new-product" element={<AddNewProduct />} />
+      </Routes>
+    </>
+  );
 }
 
-export default App
+export default App;

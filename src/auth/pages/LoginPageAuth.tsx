@@ -30,8 +30,9 @@ export const LoginPageAuth = () => {
 
             if (response.ok) {
                 console.log('Inicio de sesión exitoso');
-                changeLogged()
-                navigate('/products')
+                sessionStorage.setItem('isLoggedIn', 'true'); 
+                changeLogged();
+                navigate('/products');
                 
             } else {
                 const responseData = await response.json();
@@ -46,8 +47,6 @@ export const LoginPageAuth = () => {
     const changeLogged = useAuthStore(state => state.changeLogged)
 
     const navigate = useNavigate();
-
-    
 
     return (
         <>
@@ -97,10 +96,11 @@ export const LoginPageAuth = () => {
                 />
                 <br />
                 {error && <p style={{ color: 'red' }}>{error}</p>}
+                <h5>johnd</h5>
+                <h5>m38rmF$</h5>
                 <Button variant="contained" type='submit'>
                     Login
                 </Button>
-                
             </form>
         </>
     );
