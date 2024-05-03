@@ -11,7 +11,7 @@ function App() {
       <NavBar />
       <Routes>
         <Route path="/cart" element={<TableCarts />} />
-        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/Profile" element={<UserProfile />} />
         <Route path="/products" element={<TableProducts />} />
         <Route path="/cart" element={<TableCarts />} />
       </Routes>
