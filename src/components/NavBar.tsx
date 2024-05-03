@@ -12,13 +12,8 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom'; 
 
-<<<<<<< HEAD
-const pages = ['Products', 'new-product', 'cart', 'new-cart'];
-const settings = ['Profile', 'Logout'];
-=======
-const pages = ['Products', 'cart'];
+const pages = ['Products', 'cart', 'new-cart'];
 const settings = ['Profile'];
->>>>>>> origin/master
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
