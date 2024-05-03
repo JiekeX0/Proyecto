@@ -7,10 +7,12 @@ import { vestResolver } from "@hookform/resolvers/vest";
 import { NewCartValidate } from "./NewCartValidate";
 import { Product } from "../../store/product/productStore";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 
 
 export function AddNewCart() {
+  const navigate = useNavigate();
 
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
@@ -44,7 +46,8 @@ export function AddNewCart() {
   }, [fields]);
 
   const onClose = () => {
-    reset()
+    reset();
+    navigate(-1);
   }
 
 
