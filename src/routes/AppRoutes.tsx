@@ -4,6 +4,7 @@ import { TableProducts } from "../components/TableProducts";
 import { LoginPageAuth } from "../auth/pages/LoginPageAuth";
 import TableCarts from "../components/TableCarts";
 import App from "../App";
+import { AddNewCart } from "../components/AddNewCart/AddNewCart";
 import { UserProfile } from "../components/UserProfile";
 
 export const AppRoutes = () => {
@@ -16,15 +17,16 @@ export const AppRoutes = () => {
 
   return (
     <Routes>
-            {!logged
-            ?   <Route path="/" element={<LoginPageAuth />}/>
-            :    <Route path="/" element={<App />}>
-                    <Route path="products" element={<TableProducts />} />
-                    <Route path="cart" element={<TableCarts />} />
-                    <Route path="profile" element={<UserProfile />} />
-                </Route>
-            }
-        </Routes>
+      {!logged
+        ? <Route path="/" element={<LoginPageAuth />} />
+        : <Route path="/" element={<App />}>
+          <Route path="products" element={<TableProducts />} />
+          <Route path="cart" element={<TableCarts />} />
+          <Route path="profile" element={<UserProfile />} />
+          <Route path="/new-cart" element={<AddNewCart />} />
+        </Route>
+      }
+    </Routes>
   );
 };
 

@@ -23,8 +23,9 @@ export const TableProducts = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
   const [addProduct, setAddProdut] = useState(false);
 
+
   let categories:Category [] = [];
-  
+
   const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -70,6 +71,10 @@ export const TableProducts = () => {
     setEditProductData(null);
   };
 
+  const handleAddProduct = () =>{
+    setAddProdut(true)
+  }
+
   useEffect(() => {
     setProducts(data as unknown as Product[] ?? []);
   }, [data]);
@@ -97,7 +102,6 @@ export const TableProducts = () => {
   }
 
   const handleSort = (field: string) => {
-    setSelectedCategory(null)
     fetch('https://fakestoreapi.com/products')
       .then(res => res.json())
       .then(data => {
@@ -167,12 +171,6 @@ export const TableProducts = () => {
     },
   ];
 
-
-  const handleAddProduct = () => {
-    setSelectedCategory(null)
-    setAddProdut(true);
-}
-
   return (
     <div style={{ height: 800, width: '100%' }}>
       <Box sx={{
@@ -224,12 +222,12 @@ export const TableProducts = () => {
           border: 2,
           borderColor: '#386947',
         }}
-        />
+      />
       {editProductData && (
         <EditForm
-        product={editProductData}
-        onSave={(updatedProduct) => handleSaveEdit(editProductData.id, updatedProduct)}
-        onCancel={() => setEditProductData(null)}
+          product={editProductData}
+          onSave={(updatedProduct) => handleSaveEdit(editProductData.id, updatedProduct)}
+          onCancel={() => setEditProductData(null)}
         />
       )}
 
@@ -246,7 +244,7 @@ export const TableProducts = () => {
               timeout: 500,
             },
           }}
-          >
+        >
           <Fade in={open}>
             <Box sx={style}>
               <Typography variant="h5" component="h2">
@@ -257,7 +255,7 @@ export const TableProducts = () => {
                 <img
                   src={selectedRowData ? selectedRowData['image'] : 'No data'}
                   alt=""
-                  />
+                />
               </Typography>
               <Typography variant="h6" component="h2">
                 Price: {selectedRowData ? selectedRowData['price'] : 'No data'}€

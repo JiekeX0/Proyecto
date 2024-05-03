@@ -4,6 +4,7 @@ import NavBar from './components/NavBar';
 import TableCarts from './components/TableCarts';
 import { UserProfile } from './components/UserProfile';
 import { TableProducts } from './components/TableProducts';
+import { AddNewCart } from './components/AddNewCart/AddNewCart';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/Profile" element={<UserProfile />} />
         <Route path="/products" element={<TableProducts />} />
         <Route path="/cart" element={<TableCarts />} />
+        <Route path="/new-cart" element={<AddNewCart />} />
       </Routes>
     </>
   );
