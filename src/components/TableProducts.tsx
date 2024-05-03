@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import EditForm from './EditForm';
 import { DataGrid, GridColDef, GridApi } from "@mui/x-data-grid";
-import { Button, Modal, Backdrop, Fade, Box, Typography, Grid } from '@mui/material';
+import { Button, Modal, Backdrop, Fade, Box, Typography,Grid } from '@mui/material';
 import { FilterByCategory } from './FilterByCategory';
 import { ProductCard } from './ProductCard';
 import AddNewProduct from './AddNewProduct/AddNewProduct';
