@@ -4,16 +4,9 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs, { Dayjs } from 'dayjs';
 import CircularProgress from '@mui/material/CircularProgress';
+import { Product } from '../store/product/productStore';
+import { User } from '../store/auth/authStore';
 
-export interface Product {
-  id: number;
-  title: string;
-}
-
-export interface User {
-  id: number;
-  username: string;
-}
 
 export interface Cart {
   id: number;
