@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import EditForm from './EditForm';
 import { DataGrid, GridColDef, GridApi } from "@mui/x-data-grid";
-import { Button, Modal, Backdrop, Fade, Box, Typography,Grid } from '@mui/material';
+import { Button, Modal, Backdrop, Fade, Box, Typography,Grid, CircularProgress } from '@mui/material';
 import { FilterByCategory } from './FilterByCategory';
 import { ProductCard } from './ProductCard';
 import AddNewProduct from './AddNewProduct/AddNewProduct';
@@ -37,10 +37,25 @@ export const TableProducts = () => {
     p: 4,
   };
 
-  const { data } = useQuery({
-    queryKey: ["getProducts"],
-    queryFn: async () => fetch('https://fakestoreapi.com/products').then((data) => data.json()),
+
+  async function fetchProducts(){
+    if(selectedCategory !== null){
+      const res = await fetch(`https://fakestoreapi.com/products/category/${selectedCategory.category}`);
+      const json = await res.json();
+        return json;
+    }
+
+      const res = await fetch('https://fakestoreapi.com/products')
+      const json = await res.json();
+        return json;
+  }
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["getProducts", selectedCategory],
+    queryFn: async () => fetchProducts()
   });
+
+
 
   const handleDelete = (productId: number) => {
     deleteProduct(productId);
@@ -57,14 +72,12 @@ export const TableProducts = () => {
 
   useEffect(() => {
     setProducts(data as unknown as Product[] ?? []);
-  }, [data, selectedCategory]);
+  }, [data]);
 
-  function fetchCategory(){
-    return fetch('https://fakestoreapi.com/products/categories')
-        .then(res=>res.json())
-        .then(json=>{
-            return json
-        })
+  async function fetchCategory(){
+    const res = await fetch('https://fakestoreapi.com/products/categories');
+    const json = await res.json();
+    return json;
   }
 
   const allCategories = useQuery({queryKey: ['categories'], queryFn: ()=>fetchCategory()})
@@ -180,7 +193,9 @@ export const TableProducts = () => {
       <AddNewProduct open={addProduct} setOpen={setAddProdut} />
 
       {selectedCategory ? 
-            <Grid container direction="row" justifyContent='center' spacing={{ xs:3, md: 4}}> 
+            isLoading?
+              <CircularProgress color="info" size={250} sx={{alignSelf: 'center'}}/>
+            :<Grid container direction="row" justifyContent='center' spacing={{ xs:3, md: 4}}> 
                 {products.map((product: Product)=>
                     <Grid item key={product.id}><ProductCard product={product}/></Grid>
                 )}
