@@ -8,15 +8,22 @@ import { FormValidation } from './LoginPageValidate';
 import { useAuthStore } from '../../store/auth/authStore';
 import { useNavigate } from 'react-router-dom';
 
-
 export const LoginPageAuth = () => {
     const [error, setError] = useState<string | null>(null); 
+    const [userData, setUserData] = useState<any>(JSON);
 
     const { handleSubmit, formState, control } = useForm({
         mode: "onChange",
         reValidateMode: "onChange",
         resolver: vestResolver(FormValidation)
     });
+
+    const changeLogged = useAuthStore(state => state.changeLogged);
+    const setUser = useAuthStore(state => state.setUser);
+    const navigate = useNavigate();
+
+    
+    let token=userData;
 
     const handleLogin = async (data: any) => {
         try {
@@ -27,26 +34,29 @@ export const LoginPageAuth = () => {
                 },
                 body: JSON.stringify(data),
             });
-
+    
             if (response.ok) {
-                console.log('Inicio de sesión exitoso');
+                const userData = await response.json(); 
+                token = userData.token;
+                sessionStorage.setItem('token', token);
+                console.log(userData);
                 sessionStorage.setItem('isLoggedIn', 'true'); 
+                setUserData(token); 
                 changeLogged();
+                setUser(userData);
                 navigate('/products');
                 
             } else {
                 const responseData = await response.json();
                 setError(responseData.message || 'Error al iniciar sesión');
             }
+            console.log(token);
         } catch (error) {
             console.error('Error al iniciar sesión:', error);
             setError('Error al iniciar sesión');
         }
     };
 
-    const changeLogged = useAuthStore(state => state.changeLogged)
-
-    const navigate = useNavigate();
 
     return (
         <>
@@ -62,6 +72,7 @@ export const LoginPageAuth = () => {
                 <Controller
                     name="username"
                     control={control}
+                    defaultValue="johnd"
                     render={({ field }) => (
                         <TextField
                             {...field}
@@ -80,6 +91,7 @@ export const LoginPageAuth = () => {
                 <Controller
                     name="password"
                     control={control}
+                    defaultValue="m38rmF$"
                     render={({ field }) => (
                         <TextField
                             {...field}
@@ -96,8 +108,7 @@ export const LoginPageAuth = () => {
                 />
                 <br />
                 {error && <p style={{ color: 'red' }}>{error}</p>}
-                <h5>johnd</h5>
-                <h5>m38rmF$</h5>
+               
                 <Button variant="contained" type='submit'>
                     Login
                 </Button>
