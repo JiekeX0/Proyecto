@@ -6,6 +6,8 @@ import dayjs, { Dayjs } from 'dayjs';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Product } from '../store/product/productStore';
 import { User } from '../store/auth/authStore';
+import { Button, Box } from '@mui/material';
+
 
 
 export interface Cart {
@@ -80,6 +82,10 @@ const TableCarts = () => {
     },
   };
 
+  const handleEdit = (id: number) => {
+
+  }
+
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'Cart Id', width: 70 },
     { field: 'userId', headerName: 'User', width: 150 },
@@ -95,7 +101,7 @@ const TableCarts = () => {
     {
       field: 'products',
       headerName: 'Products',
-      width: 1000,
+      width: 800,
       renderCell: (params) => (
         <span>
           {params.value && Array.isArray(params.value) && params.value.map((product: any) => (
@@ -104,6 +110,23 @@ const TableCarts = () => {
         </span>
       )
     },
+    {
+      field: 'Delete', 
+      headerName: 'Delete',
+      width: 130, 
+      renderCell: (params) => (
+        <Button onClick={() => handleEdit(params.row.id)} variant='outlined' color='error'>Delete</Button>
+      ),
+    },
+    {
+      field: 'edit', 
+      headerName: 'Edit', 
+      width: 130,
+      renderCell: (params) => (
+        <Button onClick={() => handleEdit(params.row.id)} variant='outlined' color='warning'>Edit</Button>
+      ),
+    },
+    
   ];
 
   const [carts, setCarts] = useState<Cart[]>([]);
@@ -174,8 +197,32 @@ const TableCarts = () => {
   };
 
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      {isLoading && <CircularProgress />}
+    <div style={{ height: 500, width: '100%' }}>
+      {isLoading ? <CircularProgress /> :
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        gap: 2,
+        width: '100%',
+        height: '15%'
+      }}>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          label="Start Date"
+          value={startValue}
+          format='DD-MM-YYYY'
+          onChange={(newValue) => setStartValue(newValue)}
+        />
+        <DatePicker
+          label="End Date"
+          format='DD-MM-YYYY'
+          value={finValue}
+          onChange={(newValue) => setFinValue(newValue)}
+        />
+      </LocalizationProvider>
+      <button onClick={handleFilter}>Filter</button>
+      </Box>}
       <DataGrid
         rows={carts}
         columns={columns}
@@ -198,23 +245,6 @@ const TableCarts = () => {
           borderColor: '#386947',
         }}
       />
-      <br />
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker
-          label="Start Date"
-          value={startValue}
-          format='DD-MM-YYYY'
-          onChange={(newValue) => setStartValue(newValue)}
-        />
-        <DatePicker
-          label="End Date"
-          format='DD-MM-YYYY'
-          value={finValue}
-          onChange={(newValue) => setFinValue(newValue)}
-        />
-      </LocalizationProvider>
-      <br />
-      <button onClick={handleFilter}>Filter</button>
     </div>
   );
 };
