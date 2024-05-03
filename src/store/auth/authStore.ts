@@ -1,15 +1,15 @@
 import { create } from 'zustand'
 
  export interface User {
-    id?: number;
-    email?: string;
+    id: number;
+    email: string;
     username: string;
     password: string;
     name?: {
         firstname: string;
         lastname: string;
     }
-    address?: {
+    address: {
         city: string
         street: string
         number: number
