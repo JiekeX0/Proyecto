@@ -13,12 +13,11 @@ import MenuItem from '@mui/material/MenuItem';
 import { Link } from 'react-router-dom'; 
 
 const pages = ['Products', 'new-product', 'cart'];
-const settings = ['Profile', 'Logout'];
+const settings = ['Profile'];
 
 function NavBar() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -30,6 +29,12 @@ function NavBar() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleLogout = () => {
+   
+    console.log('Usuario deslogueado');
+    handleCloseUserMenu();
   };
 
   return (
@@ -98,7 +103,7 @@ function NavBar() {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar src="../../public/img/images.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -118,8 +123,10 @@ function NavBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+                <MenuItem key={setting} onClick={setting === 'Logout' ? handleLogout : handleCloseUserMenu}>
+                  <Link to={setting} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <Typography textAlign="center">{setting}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>

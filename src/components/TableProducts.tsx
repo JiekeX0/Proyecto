@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { DataGrid, GridColDef, GridApi } from "@mui/x-data-grid";
-import { Button, Modal, Backdrop, Fade, Box, Typography } from '@mui/material';
+import { Button, Modal, Backdrop, Fade, Box, Typography, CircularProgress } from '@mui/material';
 import { useState } from 'react';
 
 
@@ -88,7 +88,7 @@ const ProductsTable = () => {
   const { data: products, isLoading, isError } = useQuery({ queryKey: ["productos"], queryFn: async () => fetchProducts().then((res) => res) });
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <CircularProgress />;
   }
 
   if (isError) {
@@ -97,6 +97,7 @@ const ProductsTable = () => {
 
   return (
     <div style={{ height: 800, width: '100%' }}>
+      {isLoading && <CircularProgress />}
       <DataGrid
         rows={products}
         columns={columns}

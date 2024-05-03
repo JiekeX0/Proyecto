@@ -5,6 +5,7 @@ import { LoginPageAuth } from "../auth/pages/LoginPageAuth"
 import TableCarts from '../components/TableCarts';
 import ProductsTable from "../components/TableProducts";
 import AddNewProduct from "../components/AddNewProduct/AddNewProduct"
+import { UserProfile } from "../components/UserProfile";
 
 
 export const AppRoutes = () =>{
@@ -25,6 +26,7 @@ export const AppRoutes = () =>{
                     <Route path="products" element={<ProductsTable />} />
                     <Route path="cart" element={<TableCarts />} />
                     <Route path="new-product" element={<AddNewProduct />} />
+                    <Route path="profile" element={<UserProfile />} />
                 </Route>
             }
         </Routes> 
