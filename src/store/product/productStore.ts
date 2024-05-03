@@ -7,7 +7,7 @@ export interface Product {
     category: string;
     image: string;
     description: string;
-    rating: {
+    rating?: {
         rate: number;
         count: number;
     };

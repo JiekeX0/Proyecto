@@ -122,49 +122,12 @@ export function AddNewCart() {
                           fullWidth
                           inputProps={{
                             ...params.inputProps,
-                            autoComplete: "disabled" // disable autocomplete and autofill
+                            autoComplete: "disabled" 
                           }}
                         />
                       )}
                     />
                   )}
-                // render={
-                //   <Autocomplete
-                //     id="country-select-demo"
-                //     style={{ width: 300 }}
-                //     options={products}
-
-                //     autoHighlight
-                //     getOptionLabel={(option: Product) => option.title}
-
-                //     renderInput={(params: any) => (
-                //       <TextField
-                //         {...params}
-                //         label="Choose a country"
-                //         variant="outlined"
-                //         fullWidth
-                //         inputProps={{
-                //           ...params.inputProps,
-                //           autoComplete: "disabled" // disable autocomplete and autofill
-                //         }}
-                //       />
-                //     )}
-                //   />
-                // }
-
-                // render={({ field }) => (
-                //   <TextField
-                //     {...field}
-                //     label={`Product ${index + 1}`}
-                //     type="text"
-                //     fullWidth
-                //     variant="standard"
-                //     style={{ marginBottom: '8px' }}
-                //     onBlur={(e) => handleAutocomplete(index, e.target.value)}
-                //     error={formState.errors.products?.[index]?.title ? true : false}
-                //     helperText={(formState.errors?.products?.[index]?.title?.message as string) ?? ""}
-                //   />
-                // )}
                 />
                 <Controller
                   name={`products.${index}.quantity`}
