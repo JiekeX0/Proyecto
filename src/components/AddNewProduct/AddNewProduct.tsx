@@ -28,7 +28,6 @@ export default function AddNewProduct(){
 
     
     return(
-
         <Box component='section' sx={{margin: 0, display: 'flex', justifyContent: 'center'}}>
             {mutation.isPending && <h2>Is Pending...</h2>}
             {mutation.isError && <h2>Error message</h2>}

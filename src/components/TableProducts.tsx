@@ -118,11 +118,6 @@ export const TableProducts = () => {
 
   return (
     <div style={{ height: 800, width: '100%' }}>
-      <div>
-        <button onClick={() => handleSort('title')}>Sort by Title</button>
-        <button onClick={() => handleSort('price')}>Sort by Price</button>
-        <button onClick={() => handleSort('category')}>Sort by Category</button>
-      </div>
       <DataGrid
         rows={products}
         columns={columns}
@@ -193,6 +188,11 @@ export const TableProducts = () => {
             </Box>
           </Fade>
         </Modal>
+      </div>
+      <div>
+        <button onClick={() => handleSort('title')}>Sort by Title</button>
+        <button onClick={() => handleSort('price')}>Sort by Price</button>
+        <button onClick={() => handleSort('category')}>Sort by Category</button>
       </div>
     </div>
   );
