@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import EditForm from './EditForm';
 import { DataGrid, GridColDef, GridApi } from "@mui/x-data-grid";
-import { Button, Modal, Backdrop, Fade, Box, Typography,Grid } from '@mui/material';
+import { Button, Modal, Backdrop, Fade, Box, Typography,Grid, CircularProgress } from '@mui/material';
 import { FilterByCategory } from './FilterByCategory';
 import { ProductCard } from './ProductCard';
 import AddNewProduct from './AddNewProduct/AddNewProduct';
@@ -23,8 +23,9 @@ export const TableProducts = () => {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
   const [addProduct, setAddProdut] = useState(false);
 
+
   let categories:Category [] = [];
-  
+
   const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -37,10 +38,25 @@ export const TableProducts = () => {
     p: 4,
   };
 
-  const { data } = useQuery({
-    queryKey: ["getProducts"],
-    queryFn: async () => fetch('https://fakestoreapi.com/products').then((data) => data.json()),
+
+  async function fetchProducts(){
+    if(selectedCategory !== null){
+      const res = await fetch(`https://fakestoreapi.com/products/category/${selectedCategory.category}`);
+      const json = await res.json();
+        return json;
+    }
+
+      const res = await fetch('https://fakestoreapi.com/products')
+      const json = await res.json();
+        return json;
+  }
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["getProducts", selectedCategory],
+    queryFn: async () => fetchProducts()
   });
+
+
 
   const handleDelete = (productId: number) => {
     deleteProduct(productId);
@@ -55,16 +71,18 @@ export const TableProducts = () => {
     setEditProductData(null);
   };
 
+  const handleAddProduct = () =>{
+    setAddProdut(true)
+  }
+
   useEffect(() => {
     setProducts(data as unknown as Product[] ?? []);
-  }, [data, selectedCategory]);
+  }, [data]);
 
-  function fetchCategory(){
-    return fetch('https://fakestoreapi.com/products/categories')
-        .then(res=>res.json())
-        .then(json=>{
-            return json
-        })
+  async function fetchCategory(){
+    const res = await fetch('https://fakestoreapi.com/products/categories');
+    const json = await res.json();
+    return json;
   }
 
   const allCategories = useQuery({queryKey: ['categories'], queryFn: ()=>fetchCategory()})
@@ -84,7 +102,6 @@ export const TableProducts = () => {
   }
 
   const handleSort = (field: string) => {
-    setSelectedCategory(null)
     fetch('https://fakestoreapi.com/products')
       .then(res => res.json())
       .then(data => {
@@ -154,12 +171,6 @@ export const TableProducts = () => {
     },
   ];
 
-
-  const handleAddProduct = () => {
-    setSelectedCategory(null)
-    setAddProdut(true);
-}
-
   return (
     <div style={{ height: 800, width: '100%' }}>
       <Box sx={{
@@ -180,7 +191,9 @@ export const TableProducts = () => {
       <AddNewProduct open={addProduct} setOpen={setAddProdut} />
 
       {selectedCategory ? 
-            <Grid container direction="row" justifyContent='center' spacing={{ xs:3, md: 4}}> 
+            isLoading?
+              <CircularProgress color="info" size={250} sx={{alignSelf: 'center'}}/>
+            :<Grid container direction="row" justifyContent='center' spacing={{ xs:3, md: 4}}> 
                 {products.map((product: Product)=>
                     <Grid item key={product.id}><ProductCard product={product}/></Grid>
                 )}
@@ -209,12 +222,12 @@ export const TableProducts = () => {
           border: 2,
           borderColor: '#386947',
         }}
-        />
+      />
       {editProductData && (
         <EditForm
-        product={editProductData}
-        onSave={(updatedProduct) => handleSaveEdit(editProductData.id, updatedProduct)}
-        onCancel={() => setEditProductData(null)}
+          product={editProductData}
+          onSave={(updatedProduct) => handleSaveEdit(editProductData.id, updatedProduct)}
+          onCancel={() => setEditProductData(null)}
         />
       )}
 
@@ -231,7 +244,7 @@ export const TableProducts = () => {
               timeout: 500,
             },
           }}
-          >
+        >
           <Fade in={open}>
             <Box sx={style}>
               <Typography variant="h5" component="h2">
@@ -242,7 +255,7 @@ export const TableProducts = () => {
                 <img
                   src={selectedRowData ? selectedRowData['image'] : 'No data'}
                   alt=""
-                  />
+                />
               </Typography>
               <Typography variant="h6" component="h2">
                 Price: {selectedRowData ? selectedRowData['price'] : 'No data'}€

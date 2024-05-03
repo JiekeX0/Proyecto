@@ -1,6 +1,4 @@
 import { Autocomplete, TextField, Box } from "@mui/material"
-import { useEffect} from "react"
-import { useProductStore } from "../store/product/productStore"
 import { Category } from "./TableProducts"
 
 type props = {
@@ -11,26 +9,6 @@ type props = {
 
 export const FilterByCategory = ({selectedCategory, setSelectedCategory, categories}: props) => {
     
-    const { setProducts } = useProductStore();
-
-    function fetchSpecificCategory(category: string){
-        return fetch(`https://fakestoreapi.com/products/category/${category}`)
-            .then(res=>res.json())
-            .then(json=>{
-                return json
-            })
-    }
-
-    useEffect(() => {
-    (async () => {
-        if(selectedCategory !== null){
-            const productsFetched = await fetchSpecificCategory(selectedCategory.category)
-            setProducts(productsFetched)
-        }
-    })()
-
-    },[,selectedCategory])
-
     return (
     <Box sx={{display: 'flex', flexDirection: 'column', alignItems: "center", gap: 3 }}>
         <Autocomplete

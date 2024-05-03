@@ -160,7 +160,7 @@ export default function AddNewProduct({open, setOpen}: props){
                 
                         </Box>
                         
-                        <Box sx={{display: 'flex', justifyContent: 'space-around', bgcolor: '#cce6d1', color: 'white'}}>
+                        <Box sx={{display: 'flex', justifyContent: 'space-around'}}>
                             <Button onClick={onClose} sx={{width: '35%'}} color="error" variant="outlined">Reset</Button>
                             <Button type="submit" sx={{width: '35%'}} color="success" variant="contained">Add product</Button>
                         </Box>
