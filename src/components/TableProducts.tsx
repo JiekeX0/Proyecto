@@ -3,7 +3,16 @@ import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import EditForm from './EditForm';
 import { DataGrid, GridColDef, GridApi } from "@mui/x-data-grid";
-import { Button, Modal, Backdrop, Fade, Box, Typography } from '@mui/material';
+import { Button, Modal, Backdrop, Fade, Box, Typography,Grid, CircularProgress } from '@mui/material';
+import { FilterByCategory } from './FilterByCategory';
+import { ProductCard } from './ProductCard';
+import AddNewProduct from './AddNewProduct/AddNewProduct';
+
+
+export interface Category{
+  firstLetter: string,
+  category: string
+}
 
 export const TableProducts = () => {
   const { products, setProducts, deleteProduct, editProduct } = useProductStore();
@@ -11,6 +20,11 @@ export const TableProducts = () => {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [open, setOpen] = useState(false); // Estado para controlar si la modal está abierta
   const [selectedRowData, setSelectedRowData] = useState<any>(null); // Estado para almacenar los datos de la fila seleccionada
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(null)
+  const [addProduct, setAddProdut] = useState(false);
+
+
+  let categories:Category [] = [];
 
   const style = {
     position: 'absolute' as 'absolute',
@@ -24,16 +38,31 @@ export const TableProducts = () => {
     p: 4,
   };
 
-  const { data } = useQuery({
-    queryKey: ["getProducts"],
-    queryFn: async () => fetch('https://fakestoreapi.com/products').then((data) => data.json()),
+
+  async function fetchProducts(){
+    if(selectedCategory !== null){
+      const res = await fetch(`https://fakestoreapi.com/products/category/${selectedCategory.category}`);
+      const json = await res.json();
+        return json;
+    }
+
+      const res = await fetch('https://fakestoreapi.com/products')
+      const json = await res.json();
+        return json;
+  }
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["getProducts", selectedCategory],
+    queryFn: async () => fetchProducts()
   });
+
+
 
   const handleDelete = (productId: number) => {
     deleteProduct(productId);
   }
 
-  const handleEdit = (productId: number, productData: Product) => {
+  const handleEdit = ( productData: Product) => {
     setEditProductData(productData);
   };
 
@@ -42,9 +71,35 @@ export const TableProducts = () => {
     setEditProductData(null);
   };
 
+  const handleAddProduct = () =>{
+    setAddProdut(true)
+  }
+
   useEffect(() => {
     setProducts(data as unknown as Product[] ?? []);
   }, [data]);
+
+  async function fetchCategory(){
+    const res = await fetch('https://fakestoreapi.com/products/categories');
+    const json = await res.json();
+    return json;
+  }
+
+  const allCategories = useQuery({queryKey: ['categories'], queryFn: ()=>fetchCategory()})
+   
+ 
+      {allCategories.isLoading && <h1>Is Loading...</h1>}
+      {allCategories.isError && <h1>Error...</h1>}
+    
+      if(allCategories.isSuccess){
+           categories = allCategories?.data.map((category: string) => {
+           const firstLetter = category[0].toUpperCase();
+           return {
+               firstLetter: /[0-9]/.test(firstLetter) ? '0-9' : firstLetter,
+               category: category,
+            }; 
+        }); 
+  }
 
   const handleSort = (field: string) => {
     fetch('https://fakestoreapi.com/products')
@@ -111,13 +166,39 @@ export const TableProducts = () => {
       headerName: 'Edit',
       width: 150,
       renderCell: (params) => (
-        <button onClick={() => handleEdit(params.row.id, params.row)}>Edit</button>
+        <button onClick={() => handleEdit(params.row.id)}>Edit</button>
       ),
     },
   ];
 
   return (
     <div style={{ height: 800, width: '100%' }}>
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        gap: 2,
+        width: '100%',
+        height: '9%'
+      }}>
+        <button onClick={() => handleSort('title')}>Sort by Title</button>
+        <button onClick={() => handleSort('price')}>Sort by Price</button>
+        <button onClick={() => handleSort('category')}>Sort by Category</button>
+        <button onClick={handleAddProduct}>Add Product</button>
+        <FilterByCategory selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} categories={categories}/>
+      </Box>
+
+      <AddNewProduct open={addProduct} setOpen={setAddProdut} />
+
+      {selectedCategory ? 
+            isLoading?
+              <CircularProgress color="info" size={250} sx={{alignSelf: 'center'}}/>
+            :<Grid container direction="row" justifyContent='center' spacing={{ xs:3, md: 4}}> 
+                {products.map((product: Product)=>
+                    <Grid item key={product.id}><ProductCard product={product}/></Grid>
+                )}
+            </Grid> 
+      :<>
       <DataGrid
         rows={products}
         columns={columns}
@@ -189,11 +270,7 @@ export const TableProducts = () => {
           </Fade>
         </Modal>
       </div>
-      <div>
-        <button onClick={() => handleSort('title')}>Sort by Title</button>
-        <button onClick={() => handleSort('price')}>Sort by Price</button>
-        <button onClick={() => handleSort('category')}>Sort by Category</button>
-      </div>
+      </>}
     </div>
   );
 };
