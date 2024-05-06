@@ -7,6 +7,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { Product } from '../store/product/productStore';
 import { User } from '../store/auth/authStore';
 import { Button, Box } from '@mui/material';
+import { deleteCart, updateCart } from '../services/Carts.services';
 
 
 
@@ -82,8 +83,17 @@ const TableCarts = () => {
     },
   };
 
-  const handleEdit = (id: number) => {
 
+  const handleDelete = async (id: number) => {
+    const response = deleteCart(id)
+    if(await response){
+      alert(`El elemento con id ${id} ha sido eliminado `);
+      
+    }
+  }
+
+  const handleEdit = (id: number) => {
+    console.log(id)
   }
 
   const columns: GridColDef[] = [
@@ -115,7 +125,7 @@ const TableCarts = () => {
       headerName: 'Delete',
       width: 130, 
       renderCell: (params) => (
-        <Button onClick={() => handleEdit(params.row.id)} variant='outlined' color='error'>Delete</Button>
+        <Button onClick={() => handleDelete(params.row.id)} variant='outlined' color='error'>Delete</Button>
       ),
     },
     {
@@ -195,6 +205,9 @@ const TableCarts = () => {
       setIsLoading(false);
     }
   };
+
+
+
 
   return (
     <div style={{ height: 500, width: '100%' }}>
